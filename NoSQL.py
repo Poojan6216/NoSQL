@@ -4,7 +4,7 @@ from pymongo import MongoClient
 import matplotlib.pyplot as plt
 
 # Connect to MongoDB
-client = MongoClient('mongodb+srv://<poojanpatel119>:<Poojan6216>@cluster0.sf4gktc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+client = MongoClient('mongodb+srv://poojanpatel119:Poojan6216@cluster0.sf4gktc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
 db = client['NoSQL']
 reviews = db['AmazonProduct']
 
