@@ -14,7 +14,8 @@ cursor = reviews.find({}, {'reviews.date': 1, 'reviews.text': 1, 'reviews.rating
 # Analyze sentiment and prepare for aggregation
 results = []
 for document in cursor:
-    sentiment = TextBlob(document['reviews']['text']).sentiment.polarity
+    abc = str(document['reviews']['text'])
+    sentiment = TextBlob(abc).sentiment.polarity
     results.append({
         'date': pd.to_datetime(document['reviews']['date']),
         'sentiment': sentiment,
@@ -30,3 +31,5 @@ daily_means = df.groupby(df['date'].dt.date).mean()
 # Plotting
 daily_means.plot(y=['sentiment', 'rating'], figsize=(14, 7), title="Sentiment and Rating Trend Over Time")
 plt.show()
+
+
