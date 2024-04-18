@@ -8,6 +8,10 @@ This project demonstrates data analysis and visualization using Python with Mong
 - MongoDB
 - Required Python libraries: pymongo, textblob, pandas, matplotlib, plotly
 
+## Dataset - Kaggle - Consumer Reviews of Amazon Products
+
+https://www.kaggle.com/datasets/datafiniti/consumer-reviews-of-amazon-products?resource=download&select=Datafiniti_Amazon_Consumer_Reviews_of_Amazon_Products_May19.csv
+
 ## Installation
 
 1. Clone this repository:
