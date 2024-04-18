@@ -126,28 +126,6 @@ def aggregate_ratings_by_product_graph():
     plt.tight_layout()
     plt.show()
 
-# def customer_sentiment_over_time_graph():
-#     pipeline = [
-#         {'$match': {'dateAdded': {'$gte': datetime.datetime(2020, 1, 1)}}},
-#         {'$group': {'_id': '$dateAdded', 'averageSentiment': {'$avg': '$reviews.sentiment'}}}
-#     ]
-#     results = collection.aggregate(pipeline)
-    
-#     dates = []
-#     sentiments = []
-#     for result in results:
-#         dates.append(result['_id'])
-#         sentiments.append(result['averageSentiment'])
-    
-#     plt.figure(figsize=(10, 8))
-#     plt.plot(dates, sentiments, marker='o', linestyle='-', color='purple')
-#     plt.xlabel('Date')
-#     plt.ylabel('Average Sentiment')
-#     plt.title('Customer Sentiment Over Time')
-#     plt.xticks(rotation=45, ha='right')
-#     plt.tight_layout()
-#     plt.show()
-
 
 def customer_ratings_over_time_graph():
     # This pipeline filters reviews, groups them by date, and calculates the average rating for each date
