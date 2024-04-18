@@ -69,6 +69,7 @@
 from pymongo import MongoClient
 import datetime
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 # MongoDB connection setup
 client = MongoClient('mongodb+srv://poojanpatel119:Poojan6216@cluster0.sf4gktc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
@@ -111,7 +112,8 @@ def aggregate_ratings_by_product_graph():
     product_names = []
     avg_ratings = []
     for result in results:
-        trimmed_name = ' '.join(result['_id'].split()[:3])  # Limit to the first two words
+        trimmed_name = ' '.join(result['_id'].split()[:3])
+          # Limit to the first two words
         product_names.append(trimmed_name)
         avg_ratings.append(result['averageRating'])
     
@@ -124,33 +126,70 @@ def aggregate_ratings_by_product_graph():
     plt.tight_layout()
     plt.show()
 
-def customer_sentiment_over_time_graph():
+# def customer_sentiment_over_time_graph():
+#     pipeline = [
+#         {'$match': {'dateAdded': {'$gte': datetime.datetime(2020, 1, 1)}}},
+#         {'$group': {'_id': '$dateAdded', 'averageSentiment': {'$avg': '$reviews.sentiment'}}}
+#     ]
+#     results = collection.aggregate(pipeline)
+    
+#     dates = []
+#     sentiments = []
+#     for result in results:
+#         dates.append(result['_id'])
+#         sentiments.append(result['averageSentiment'])
+    
+#     plt.figure(figsize=(10, 8))
+#     plt.plot(dates, sentiments, marker='o', linestyle='-', color='purple')
+#     plt.xlabel('Date')
+#     plt.ylabel('Average Sentiment')
+#     plt.title('Customer Sentiment Over Time')
+#     plt.xticks(rotation=45, ha='right')
+#     plt.tight_layout()
+#     plt.show()
+
+
+def customer_ratings_over_time_graph():
+    # This pipeline filters reviews, groups them by date, and calculates the average rating for each date
     pipeline = [
-        {'$match': {'dateAdded': {'$gte': datetime.datetime(2020, 1, 1)}}},
-        {'$group': {'_id': '$dateAdded', 'averageSentiment': {'$avg': '$reviews.sentiment'}}}
+        {'$unwind': '$reviews'},
+        {'$group': {
+            '_id': '$reviews.date',
+            'averageRating': {'$avg': '$reviews.rating'}
+        }},
+        {'$sort': {'_id': 1}}  # Sorting by date in ascending order
     ]
     results = collection.aggregate(pipeline)
     
     dates = []
-    sentiments = []
+    avg_ratings = []
     for result in results:
-        dates.append(result['_id'])
-        sentiments.append(result['averageSentiment'])
-    
-    plt.figure(figsize=(10, 8))
-    plt.plot(dates, sentiments, marker='o', linestyle='-', color='purple')
+        if result['_id'] and result['averageRating']:  # Ensure the date and rating are not None
+            dates.append(result['_id'])
+            avg_ratings.append(result['averageRating'])
+
+    if not dates:  # Check if data is available
+        print("No data found for the given criteria.")
+        return
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(dates, avg_ratings, marker='o', linestyle='-', color='blue')
     plt.xlabel('Date')
-    plt.ylabel('Average Sentiment')
-    plt.title('Customer Sentiment Over Time')
-    plt.xticks(rotation=45, ha='right')
+    plt.ylabel('Average Rating')
+    plt.title('Average Product Ratings Over Time')
+    plt.gca().xaxis.set_major_locator(mdates.YearLocator())
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    plt.xticks(rotation=45)
+    plt.grid(True)
     plt.tight_layout()
     plt.show()
+
 
 def main():
     create_text_index()  # Uncomment this line if text index is not already created
     product_recommendation_by_text_graph("great battery life")
     aggregate_ratings_by_product_graph()
-    customer_sentiment_over_time_graph()
+    customer_ratings_over_time_graph()
 
 if __name__ == "__main__":
     main()
