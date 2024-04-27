@@ -4,7 +4,7 @@ import plotly.graph_objs as go
 from plotly.offline import plot
 
 # MongoDB connection setup
-client = MongoClient('mongodb+srv://poojanpatel119:Poojan6216@cluster0.sf4gktc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+client = MongoClient('mongodb_link')
 db = client['NoSQL']
 collection = db['AmazonProduct']
 
